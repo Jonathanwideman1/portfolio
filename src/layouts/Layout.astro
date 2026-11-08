@@ -1,23 +1,59 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = '' } = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
 	</head>
 	<body>
 		<slot />
 	</body>
 </html>
 
-<style>
-	html,
+<style is:global>
+	:root {
+		color-scheme: light dark;
+		--text: #1a1a1a;
+		--muted: #555;
+		--bg: #fdfdfd;
+		--rule: #ddd;
+		--link: #0b4f8a;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:root {
+			--text: #e8e8e8;
+			--muted: #a8a8a8;
+			--bg: #141414;
+			--rule: #333;
+			--link: #7db4e6;
+		}
+	}
+
 	body {
 		margin: 0;
-		width: 100%;
-		height: 100%;
+		padding: 0 1rem;
+		background: var(--bg);
+		color: var(--text);
+		font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+		font-size: 1.0625rem;
+		line-height: 1.6;
+	}
+
+	a {
+		color: var(--link);
 	}
 </style>

@@ -1,11 +1,295 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+// Hero photo: put the file in /public (e.g. public/hero.jpg) and set heroSrc to '/hero.jpg'.
+const heroSrc = '';
+
+// Project gallery: nine tiles in a 3×3 grid. For each project fill in:
+//   src         – an image file in /public, e.g. '/projects/one.jpg' (leave '' for a placeholder)
+//   title       – shown on the tile when hovered, and as the heading of its drop-down
+//   description – the text shown in the drop-down when the tile is clicked
+const gallery = Array.from({ length: 9 }, (_, i) => ({
+	src: '',
+	title: `Project ${i + 1}`,
+	description: 'A short description of this project will go here.',
+}));
+
+// Group tiles into rows of three. Each row's drop-down panels sit right after
+// that row in the grid, so an opened panel appears directly below the clicked tile's row.
+const rows = [];
+for (let i = 0; i < gallery.length; i += 3) {
+	rows.push(gallery.slice(i, i + 3).map((item, j) => ({ ...item, id: `project-${i + j + 1}` })));
+}
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Jonathan Wideman"
+	description="Navy Mass Communication Specialist working at the intersection of communications and AI."
+>
+	<header>
+		<figure class="hero">
+			{heroSrc ? (
+				<img src={heroSrc} alt="Jonathan Wideman" />
+			) : (
+				<div class="placeholder" aria-hidden="true">Hero photo</div>
+			)}
+		</figure>
+		<h1>Jonathan Wideman</h1>
+		<p class="intro">
+			Navy Mass Communication Specialist working at the intersection of communications and AI.
+		</p>
+		<nav aria-label="Sections">
+			<a href="#about">About</a>
+			<a href="#projects">Projects</a>
+			<a href="#contact">Contact</a>
+		</nav>
+	</header>
+
+	<main>
+		<section id="about">
+			<h2>About</h2>
+			<p>A short bio will go here.</p>
+		</section>
+
+		<section id="projects">
+			<h2>Projects</h2>
+			<p>Project write-ups coming soon.</p>
+			<div class="gallery">
+				{rows.map((row) => (
+					<>
+						{row.map((item) => (
+							<button
+								type="button"
+								class="tile"
+								aria-expanded="false"
+								aria-controls={item.id}
+							>
+								{item.src ? (
+									<img src={item.src} alt="" loading="lazy" />
+								) : (
+									<span class="placeholder" aria-hidden="true" />
+								)}
+								<span class="caption">{item.title}</span>
+							</button>
+						))}
+						{row.map((item) => (
+							<div class="panel" id={item.id} hidden>
+								<h3>{item.title}</h3>
+								<p>{item.description}</p>
+							</div>
+						))}
+					</>
+				))}
+			</div>
+		</section>
+
+		<section id="contact">
+			<h2>Contact</h2>
+			<p>Contact details coming soon.</p>
+		</section>
+	</main>
 </Layout>
+
+<script>
+	// Clicking a tile opens its drop-down and closes any other open one.
+	// Clicking the same tile again closes it.
+	const tiles = document.querySelectorAll<HTMLButtonElement>('.gallery .tile');
+
+	tiles.forEach((tile) => {
+		tile.addEventListener('click', () => {
+			const opening = tile.getAttribute('aria-expanded') !== 'true';
+
+			tiles.forEach((other) => {
+				other.setAttribute('aria-expanded', 'false');
+				document.getElementById(other.getAttribute('aria-controls')!)!.hidden = true;
+			});
+
+			if (opening) {
+				tile.setAttribute('aria-expanded', 'true');
+				document.getElementById(tile.getAttribute('aria-controls')!)!.hidden = false;
+			}
+		});
+	});
+</script>
+
+<style>
+	header,
+	main {
+		max-width: 42rem;
+		margin: 0 auto;
+	}
+
+	header {
+		padding: 3rem 0 1.5rem;
+		border-bottom: 1px solid var(--rule);
+	}
+
+	/* Hero: wide 16:9 frame at the top of the header */
+	.hero {
+		margin: 0 0 1.5rem;
+		aspect-ratio: 16 / 9;
+		border-radius: 6px;
+		overflow: hidden;
+	}
+
+	/* Gallery: 3 columns × 3 rows of vertical (portrait) tiles */
+	.gallery {
+		margin-top: 1rem;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0.75rem;
+	}
+
+	.tile {
+		position: relative;
+		aspect-ratio: 2 / 3;
+		padding: 0;
+		border: 0;
+		border-radius: 4px;
+		overflow: hidden;
+		background: none;
+		cursor: pointer;
+		font: inherit;
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+	}
+
+	/* Hover (and keyboard focus): tile lifts, image zooms slightly, title fades in */
+	.tile:hover,
+	.tile:focus-visible {
+		transform: translateY(-3px);
+		box-shadow: 0 6px 16px rgb(0 0 0 / 0.25);
+	}
+
+	.tile:focus-visible {
+		outline: 2px solid var(--link);
+		outline-offset: 2px;
+	}
+
+	.tile img,
+	.tile .placeholder {
+		transition: transform 0.3s ease;
+	}
+
+	.tile:hover img,
+	.tile:hover .placeholder,
+	.tile:focus-visible img,
+	.tile:focus-visible .placeholder {
+		transform: scale(1.05);
+	}
+
+	.caption {
+		position: absolute;
+		inset: auto 0 0 0;
+		padding: 0.5rem;
+		background: linear-gradient(transparent, rgb(0 0 0 / 0.7));
+		color: #fff;
+		font-size: 0.875rem;
+		text-align: left;
+		opacity: 0;
+		transition: opacity 0.2s ease;
+	}
+
+	.tile:hover .caption,
+	.tile:focus-visible .caption,
+	.tile[aria-expanded='true'] .caption {
+		opacity: 1;
+	}
+
+	/* Open tile keeps an outline so you can see which project the drop-down belongs to */
+	.tile[aria-expanded='true'] {
+		outline: 2px solid var(--link);
+		outline-offset: 2px;
+	}
+
+	/* Drop-down panel: spans the full width of the grid, directly under its row */
+	.panel {
+		grid-column: 1 / -1;
+		padding: 1rem 1.25rem;
+		border: 1px solid var(--rule);
+		border-radius: 4px;
+		animation: drop 0.2s ease;
+	}
+
+	.panel h3 {
+		margin: 0 0 0.25rem;
+		font-size: 1.125rem;
+	}
+
+	.panel p {
+		margin: 0;
+	}
+
+	@keyframes drop {
+		from {
+			opacity: 0;
+			transform: translateY(-6px);
+		}
+	}
+
+	/* Turn off motion for visitors who have asked their device to reduce it */
+	@media (prefers-reduced-motion: reduce) {
+		.tile,
+		.tile img,
+		.tile .placeholder,
+		.caption,
+		.panel {
+			transition: none;
+			animation: none;
+		}
+
+		.tile:hover,
+		.tile:focus-visible,
+		.tile:hover img,
+		.tile:hover .placeholder,
+		.tile:focus-visible img,
+		.tile:focus-visible .placeholder {
+			transform: none;
+		}
+	}
+
+	/* Shared by hero and gallery tiles */
+	img,
+	.placeholder {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	img {
+		object-fit: cover;
+	}
+
+	.placeholder {
+		display: grid;
+		place-items: center;
+		background: var(--rule);
+		color: var(--muted);
+		font-size: 0.875rem;
+		text-align: center;
+	}
+
+	h1 {
+		margin: 0;
+		font-size: 2.25rem;
+		line-height: 1.2;
+	}
+
+	.intro {
+		margin: 0.5rem 0 1rem;
+		color: var(--muted);
+	}
+
+	nav {
+		display: flex;
+		gap: 1.25rem;
+	}
+
+	section {
+		padding: 1.5rem 0;
+	}
+
+	h2 {
+		margin: 0 0 0.5rem;
+		font-size: 1.375rem;
+	}
+</style>
