@@ -26,6 +26,14 @@ for (let i = 0; i < gallery.length; i += 3) {
 	title="Jonathan Wideman"
 	description="Navy Mass Communication Specialist working at the intersection of communications and AI."
 >
+	<nav class="topbar" aria-label="Sections">
+		<div class="topbar-links">
+			<a href="#about">About</a>
+			<a href="#projects">Projects</a>
+			<a href="#contact">Contact</a>
+		</div>
+	</nav>
+
 	<header>
 		<figure class="hero">
 			{heroSrc ? (
@@ -38,11 +46,6 @@ for (let i = 0; i < gallery.length; i += 3) {
 		<p class="intro">
 			Navy Mass Communication Specialist working at the intersection of communications and AI.
 		</p>
-		<nav aria-label="Sections">
-			<a href="#about">About</a>
-			<a href="#projects">Projects</a>
-			<a href="#contact">Contact</a>
-		</nav>
 	</header>
 
 	<main>
@@ -119,9 +122,45 @@ for (let i = 0; i < gallery.length; i += 3) {
 		margin: 0 auto;
 	}
 
-	header {
-		padding: 3rem 0 1.5rem;
+	/* Sticky bar: stays pinned to the top of the window while scrolling.
+	   The negative margin cancels the body's side padding so the bar runs edge to edge. */
+	.topbar {
+		position: sticky;
+		top: 0;
+		z-index: 10;
+		margin: 0 -1rem;
+		padding: 0.75rem 1rem;
+		background: var(--bg);
 		border-bottom: 1px solid var(--rule);
+	}
+
+	.topbar-links {
+		max-width: 42rem;
+		margin: 0 auto;
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.topbar a {
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.topbar a:hover,
+	.topbar a:focus-visible {
+		text-decoration: underline;
+	}
+
+	header {
+		padding: 1.5rem 0;
+		border-bottom: 1px solid var(--rule);
+		text-align: center;
+	}
+
+	/* When a top-bar link jumps to a section, leave room so the bar doesn't cover its heading */
+	section {
+		scroll-margin-top: 3.5rem;
 	}
 
 	/* Hero: wide 16:9 frame at the top of the header */
@@ -275,13 +314,8 @@ for (let i = 0; i < gallery.length; i += 3) {
 	}
 
 	.intro {
-		margin: 0.5rem 0 1rem;
+		margin: 0.5rem 0 0;
 		color: var(--muted);
-	}
-
-	nav {
-		display: flex;
-		gap: 1.25rem;
 	}
 
 	section {
