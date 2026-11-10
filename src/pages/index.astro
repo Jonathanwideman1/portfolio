@@ -8,11 +8,27 @@ const heroSrc = '';
 //   src         – an image file in /public, e.g. '/projects/one.jpg' (leave '' for a placeholder)
 //   title       – shown on the tile when hovered, and as the heading of its drop-down
 //   description – the text shown in the drop-down when the tile is clicked
-const gallery = Array.from({ length: 9 }, (_, i) => ({
-	src: '',
-	title: `Project ${i + 1}`,
-	description: 'A short description of this project will go here.',
-}));
+//   href        – (optional) link to the project's own page, shown in the drop-down
+const projects = [
+	{
+		src: '',
+		title: 'Navy Visual Style Guide',
+		description:
+			'I built a guide that explains how and why Navy commands should communicate, visually and verbally, across social platforms.',
+		href: '/projects/navy-visual-style-guide',
+	},
+];
+
+// Fill the rest of the grid with placeholders until there are nine tiles.
+const gallery = [
+	...projects,
+	...Array.from({ length: 9 - projects.length }, (_, i) => ({
+		src: '',
+		title: `Project ${projects.length + i + 1}`,
+		description: 'A short description of this project will go here.',
+		href: '',
+	})),
+];
 
 // Group tiles into rows of three. Each row's drop-down panels sit right after
 // that row in the grid, so an opened panel appears directly below the clicked tile's row.
@@ -28,8 +44,8 @@ for (let i = 0; i < gallery.length; i += 3) {
 >
 	<nav class="topbar" aria-label="Sections">
 		<div class="topbar-links">
-			<a href="#about">About</a>
 			<a href="#projects">Projects</a>
+			<a href="#about">About</a>
 			<a href="#contact">Contact</a>
 		</div>
 	</nav>
@@ -49,11 +65,6 @@ for (let i = 0; i < gallery.length; i += 3) {
 	</header>
 
 	<main>
-		<section id="about">
-			<h2>About</h2>
-			<p>A short bio will go here.</p>
-		</section>
-
 		<section id="projects">
 			<h2>Projects</h2>
 			<p>Project write-ups coming soon.</p>
@@ -79,11 +90,28 @@ for (let i = 0; i < gallery.length; i += 3) {
 							<div class="panel" id={item.id} hidden>
 								<h3>{item.title}</h3>
 								<p>{item.description}</p>
+								{item.href && (
+									<p class="panel-link">
+										<a href={item.href}>View project →</a>
+									</p>
+								)}
 							</div>
 						))}
 					</>
 				))}
 			</div>
+		</section>
+
+		<section id="about">
+			<h2>About</h2>
+			<p>
+				I'm a multidisciplinary visual communicator who tells the Navy's story and uses new
+				technology to make visual communication faster and sharper. As a Navy Mass Communication
+				Specialist, I lead a digital production team at the Navy Office of Information, and I was
+				named 2023 Navy Communicator of the Year. Outside uniform, I'm planning an image provenance
+				tool that helps people see where a photo came from and whether it's been altered, and I'm
+				finishing a degree in strategic communications at Syracuse University.
+			</p>
 		</section>
 
 		<section id="contact">
@@ -256,6 +284,11 @@ for (let i = 0; i < gallery.length; i += 3) {
 
 	.panel p {
 		margin: 0;
+	}
+
+	.panel .panel-link {
+		margin-top: 0.5rem;
+		font-weight: 500;
 	}
 
 	@keyframes drop {
