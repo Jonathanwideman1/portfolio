@@ -1,0 +1,55 @@
+---
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout
+	title="Building This Site | Jonathan Wideman"
+	description="I wanted room for my full creative range, so I built this site from scratch with Claude Code."
+>
+	<main>
+		<p class="back"><a href="/#projects">← Back to projects</a></p>
+
+		<h1>Building This Site</h1>
+
+		<p>
+			Website builders make it easy to look good and hard to look like yourself. Every template is
+			someone else's idea of a portfolio. I wanted room for my full creative range, so I built this
+			site from scratch with Claude Code.
+		</p>
+
+		<p>
+			I started with basic HTML and CSS. In one week I installed the tools developers use (Git,
+			Node, Homebrew and the GitHub CLI), scaffolded the site with Astro, pushed it to GitHub and
+			deployed it on Vercel. The first deploy took nine seconds.
+		</p>
+
+		<p>
+			The hardest part wasn't the code. It was keeping this from becoming an AI website. AI is built
+			for speed, so I went slow on purpose. Claude Code handles the build, but the creative calls
+			stay with me. Instead of taking the defaults, I researched the visual direction myself. I chose
+			Space Grotesk for headlines and Space Mono for body text, for a raw, technical precision that
+			breaks standard UI conventions. The palette is international orange, hyper mint, chalk white
+			and asphalt black: an off-white base with heavy black borders, and the mint and orange cutting
+			through. It reads like an industrial manifest or a raw gallery wall.
+		</p>
+	</main>
+</Layout>
+
+<style>
+	main {
+		max-width: 42rem;
+		margin: 0 auto;
+		padding: 1.5rem 0 3rem;
+	}
+
+	.back {
+		margin: 0 0 1.5rem;
+		font-size: 0.9375rem;
+	}
+
+	h1 {
+		margin: 0 0 1rem;
+		font-size: 2.25rem;
+		line-height: 1.2;
+	}
+</style>
